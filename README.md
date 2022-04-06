@@ -21,8 +21,10 @@ echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https:/
 # Install kubectl
 apt-get update
 apt-get install -y kubectl
+~~~
 
-#Install minikube ( Ubuntu)
+# Install minikube ( Ubuntu)
+```bash
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 install minikube-linux-amd64 /usr/local/bin/minikube
 # If any error is encounetred , reload the profile
@@ -42,7 +44,21 @@ minikube service hello-node --url
 
 # cleanup env
 kubectl delete service hello-node
-kubectl delete deployment hello-node
+kubectl delete deployment hello-node 
 
 
+# Create POD
+kubectl run nginx --image=nginx
+# POD status
+kubectl get pods
+# decribe pods
+kubectl describe pods <podename>
+```
+```yml
+apiVersion:
+kind:
+metadata:
+
+
+spec:
 
