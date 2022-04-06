@@ -53,12 +53,30 @@ kubectl run nginx --image=nginx
 kubectl get pods
 # decribe pods
 kubectl describe pods <podename>
+# delete pod
+kubectl delete pod <podname>
+# to get more information on pods
+
+kubectl get pods -o wide
+
 ```
-```yml
-apiVersion:
-kind:
+
+## sample yaml file for pod creation
+
+~~~yml
+apiVersion: v1
+kind: Pod
 metadata:
-
-
+    name: myapp-pod
+    labels:
+        app: myapp
+        type: frontend
 spec:
+    containers:
+        - name: nginx-container
+          image: nginx
+~~~
 
+~~~bash
+# create a pod by yaml file
+kubectl create -f pod-definition.yml 
