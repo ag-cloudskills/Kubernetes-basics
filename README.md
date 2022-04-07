@@ -1,4 +1,5 @@
 # Kubernetes-basics
+
 ~~~
 kubectl run hello-minicube
 kubectl cluster-info
@@ -6,7 +7,9 @@ kubectl get nodes
 # get OS of the node
 kubectl get nodes -o wide 
 ~~~
-## Set up kubectl 
+
+## Set up kubectl
+
 ~~~bash
 # update apt repo and package installation
 apt-get update
@@ -24,6 +27,7 @@ apt-get install -y kubectl
 ~~~
 
 # Install minikube ( Ubuntu)
+
 ```bash
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 install minikube-linux-amd64 /usr/local/bin/minikube
@@ -80,3 +84,84 @@ spec:
 ~~~bash
 # create a pod by yaml file
 kubectl create -f pod-definition.yml 
+
+
+#createReplication Controller( rc-definition.yml)
+
+$kubectl create -f rc-definition.yml
+replicationcontroller/myapp-rc created
+
+$kubectl get replicationcontroller
+NAME       DESIRED   CURRENT   READY   AGE
+myapp-rc   3         3         3       2m30s
+
+$kubectl get pods
+NAME             READY   STATUS    RESTARTS   AGE
+myapp-rc-lr5jv   1/1     Running   0          3m1s
+myapp-rc-m69wm   1/1     Running   0          3m1s
+myapp-rc-xk9gt   1/1     Running   0          3m1s
+
+$kubectl delete rc myapp-rc
+replicationcontroller "myapp-rc" deleted
+
+
+# Create replicaset ()
+$kubectl create -f replicaset-definition.yaml
+replicaset.apps/myapp-replicaset created
+
+$kubectl get replicaset
+NAME               DESIRED   CURRENT   READY   AGE
+myapp-replicaset   3         3         3       111s
+
+$kubectl get pods
+
+NAME                     READY   STATUS    RESTARTS   AGE
+myapp-replicaset-4bjw8   1/1     Running   0          2m29s
+myapp-replicaset-fg74t   1/1     Running   0          2m29s
+myapp-replicaset-h2vtp   1/1     Running   0          2m29s
+
+# increase the replica
+$kubectl replace -f replicaset-definition.yaml
+replicaset.apps/myapp-replicaset replaced
+
+$kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+myapp-replicaset-4bjw8   1/1     Running   0          17m
+myapp-replicaset-fg74t   1/1     Running   0          17m
+myapp-replicaset-h2vtp   1/1     Running   0          17m
+myapp-replicaset-r9xv2   1/1     Running   0          6s
+
+$kubectl scale --replicas=6 -f replicaset-definition.yaml
+replicaset.apps/myapp-replicaset scaled
+# yaml is not updated when scaling is done through cli
+
+$kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+myapp-replicaset-4bjw8   1/1     Running   0          19m
+myapp-replicaset-bz55d   1/1     Running   0          28s
+myapp-replicaset-fg74t   1/1     Running   0          19m
+myapp-replicaset-h2vtp   1/1     Running   0          19m
+myapp-replicaset-m2s7g   1/1     Running   0          28s
+myapp-replicaset-r9xv2   1/1     Running   0          119s
+
+$kubectl scale --replicas=8 replicaset myapp-replicaset
+replicaset.apps/myapp-replicaset scaled
+
+$kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+myapp-replicaset-4bjw8   1/1     Running   0          24m
+myapp-replicaset-6bsc8   1/1     Running   0          17s
+myapp-replicaset-bz55d   1/1     Running   0          5m44s
+myapp-replicaset-fg74t   1/1     Running   0          24m
+myapp-replicaset-h2vtp   1/1     Running   0          24m
+myapp-replicaset-hktbt   1/1     Running   0          17s
+myapp-replicaset-m2s7g   1/1     Running   0          5m44s
+myapp-replicaset-r9xv2   1/1     Running   0          7m15s
+
+# check the rs and pod details
+$kubectl describe rs myapp-replicaset
+$kubectl edit rs myapp-replicaset
+
+$kubectl delete rs myapp-replicaset
+replicaset.apps "myapp-replicaset" deleted
+
