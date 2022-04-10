@@ -159,9 +159,59 @@ myapp-replicaset-m2s7g   1/1     Running   0          5m44s
 myapp-replicaset-r9xv2   1/1     Running   0          7m15s
 
 # check the rs and pod details
-$kubectl describe rs myapp-replicaset
-$kubectl edit rs myapp-replicaset
+$ kubectl describe rs myapp-replicaset
+$ kubectl edit rs myapp-replicaset
 
-$kubectl delete rs myapp-replicaset
+$ kubectl delete rs myapp-replicaset
 replicaset.apps "myapp-replicaset" deleted
 
+# deployment
+$ kubectl create -f deployment.yaml
+deployment.apps/myapp-deployment created
+
+$ kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+myapp-deployment   3/3     3            3           13s
+
+$ kubectl describe deployment  <deploymentanme>
+$ kubectl get all
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/myapp-deployment-6ffd468748-8kv5g   1/1     Running   0          4m35s
+pod/myapp-deployment-6ffd468748-fnq9f   1/1     Running   0          4m35s
+pod/myapp-deployment-6ffd468748-mscc4   1/1     Running   0          4m35s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7d23h
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/myapp-deployment   3/3     3            3           4m35s
+
+NAME                                          DESIRED   CURRENT   READY   AGE
+replicaset.apps/myapp-deployment-6ffd468748   3         3         3       4m35s
+
+# deployment strategy - Recreate & Rolling out , Rollback
+# create
+
+$ kubectl create -f deployment.yaml --record
+deployment.apps/myapp-deployment created
+
+#update
+
+kubectl edit deployment myapp-deployment --record
+
+
+kubectl apply -f deployment-definition.yml
+kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+
+#status
+$ kubectl rollout status deployment/myapp-deployment
+deployment "myapp-deployment" successfully rolled out
+
+$ kubectl rollout history deploy
+deployment.apps/myapp-deployment
+REVISION  CHANGE-CAUSE
+1         kubectl create --filename=deployment.yaml --record=true
+
+# rollback
+kubectl rollout undo deployment/myapp-deployment 
