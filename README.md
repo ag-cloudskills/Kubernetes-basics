@@ -215,3 +215,27 @@ REVISION  CHANGE-CAUSE
 
 # rollback
 kubectl rollout undo deployment/myapp-deployment 
+
+# Create service ( nodeport)
+$ kubectl create -f service-definition.yml
+service/myapp-service created
+$ kubectl get svc
+NAME            TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+kubernetes      ClusterIP   10.96.0.1     <none>        443/TCP        8d
+myapp-service   NodePort    10.105.68.0   <none>        80:30004/TCP   4m56s
+
+minikube service myapp-service --url
+http://192.168.49.2:30004
+
+
+
+
+
+# nodeport
+
+
+
+# clusterip
+
+
+# loadbalancer
